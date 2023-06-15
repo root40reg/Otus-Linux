@@ -113,4 +113,18 @@ vagrant ssh
 exit
 vagrant destroy --force
 ```
+Зальём готовый образ на Vagrant
+```
+vagrant cloud auth login --token <token>
+vagrant cloud publish --release root40reg/centos8-kernel5 1.0 virtualbox centos-8-kernel-5-x86_64-Minimal.box
+
+vagrant init root40reg/centos8-kernel5
+```
+Если после запуска ВМ появится сообщение ```default: Warning: Authentication failure. Retrying...``` нажать ```CTRL+C```, далее ```vagrant ssh``` и ввести пароль от ВМ
+```
+[vagrant@otus-c8 ~]$ uname -r
+6.3.8-1.el8.elrepo.x86_64
+exit
+vagrant destroy --force
+```
 
