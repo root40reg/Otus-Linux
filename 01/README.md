@@ -128,3 +128,7 @@ exit
 vagrant destroy --force
 ```
 
+[Ссылка на образ ВМ](https://app.vagrantup.com/root40reg/boxes/centos8-kernel5)
+
+
+
