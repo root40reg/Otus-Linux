@@ -30,17 +30,27 @@ vagrant up
 vagrant ssh
 sudo su
 
+#Подготовим временный том для / раздела
 pvcreate /dev/sdb
 vgcreate vg_root /dev/sdb
 lvcreate -n lv_root -l +100%FREE /dev/vg_root
+
+#Создадим на нём файловую систему и смонтируем его, чтобы пернести туда данные
 mkfs.xfs /dev/vg_root/lv_root
 mount /dev/vg_root/lv_root /mnt
+
+#Скопируем все данные с / раздела в /mnt
 xfsdump -J - /dev/VolGroup00/LogVol00 | xfsrestore -J - /mnt
+#Проверяем
 ls /mnt
 
+#Переконфигурируем grub для того, чтобы при старте перейти в новый /
+#Cымитируем текущий root - сделаем в него chroot и обновим grub
 for i in /proc/ /sys/ /dev/ /run/ /boot/; do mount --bind $i /mnt/$i; done
 chroot /mnt/
 grub2-mkconfig -o /boot/grub2/grub.cfg
+
+#Обновим образ initrd
 cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g;s/.img//g"` --force; done
 ```
 
@@ -56,5 +66,8 @@ vi /boot/grub2/grub.cfg
 - ```wq``` - сохранить и выйти
 
 ```
+#Перезагружаемся
 reboot
+vagrant ssh
+sudo su
 ```
