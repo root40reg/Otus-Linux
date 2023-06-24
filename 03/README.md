@@ -61,7 +61,7 @@ vi /boot/grub2/grub.cfg
 Немного работы с vi
 - ```/``` - поиск по тексту
 - ```i``` - режим редактирования
-- ```ctrl+:``` - ввод команд:
+- ```Shift+:``` - ввод команд:
 - ```q``` - выход без сохранения
 - ```wq``` - сохранить и выйти
 
@@ -137,7 +137,7 @@ mount /dev/VolGroup00/LogVol_Home /home/
 ```
 Правим fstab для автоматического монтирования /home
 ```
-echo "`blkid | grep Home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab/home
+echo "`blkid | grep Home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab
 ```
 # Работа со снапшотами
 Сделаем файлы в /home
@@ -157,4 +157,5 @@ rm -f /home/file{11..20}
 umount /home
 lvconvert --merge /dev/VolGroup00/home_snap
 mount /home
+ls /home
 ```
