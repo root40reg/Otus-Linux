@@ -76,9 +76,6 @@ zpool import -d zpoolexport/
 zpool import -d zpoolexport/ otus
 zpool status
 ```
-
-
-
 Далее нам нужно определить настройки
 ```
 zpool get all otus          #Запрос сразу всех параметром файловой системы
@@ -107,3 +104,20 @@ find /otus/test -name "secret_message"
 cat /otus/test/task1/file_mess/secret_message
 ```
 Мы видим ссылку на GitHub, можем скопировать её в адресную строку и посмотреть репозиторий.
+
+Для автматической настройки ZFS при созданиее ВМ создаём файл ```zfs.sh``` со следующим содержимым:
+```
+#bash
+sudo -i
+zpool create otus1 mirror /dev/sdb /dev/sdc
+zpool create otus2 mirror /dev/sdd /dev/sde
+zpool create otus3 mirror /dev/sdf /dev/sdg
+zpool create otus4 mirror /dev/sdh /dev/sdi
+zpool status
+zpool list
+zfs set compression=lzjb otus1
+zfs set compression=lz4 otus2
+zfs set compression=gzip-9 otus3
+zfs set compression=zle otus4
+```
+В файле Vagrabtfile в конце перед ```end```дописываем параметр ```box.vm.provision "shell", path: boxconfig[:provision]```
