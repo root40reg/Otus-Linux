@@ -120,4 +120,4 @@ zfs set compression=lz4 otus2
 zfs set compression=gzip-9 otus3
 zfs set compression=zle otus4
 ```
-В файле Vagrabtfile в конце перед ```end```дописываем параметр ```box.vm.provision "shell", path: boxconfig[:provision]```
+В файле Vagrantfile в конце перед ```end```дописываем параметр ```box.vm.provision "shell", path: boxconfig[:provision]```
