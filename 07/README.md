@@ -33,7 +33,7 @@ yum-builddep /root/rpmbuild/SPECS/nginx.spec
 ```
 поправим spec файл, чтобы NGINX собирался с необходимыми нам опциями
 ```
-nano rpmbuild/SPECS/nginx.spec
+nano /root/rpmbuild/SPECS/nginx.spec
 ```
 В build добавляем (примерно 114 строка) ```--with-openssl=/home/vagrant/openssl-OpenSSL_1_1_1-stable \ ```
 
