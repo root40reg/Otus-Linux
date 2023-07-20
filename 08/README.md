@@ -98,7 +98,9 @@ lsinitrd -m /boot/initramfs-$(uname -r).img | grep test
 - Перезагрузиться и руками выключить опции rghb и quiet и увидеть вывод
 - Отредактировать grub.cfg, убрав эти опции
 
+После перезагрузки в окне virtualbox наблюдаем пингвинчика :)
 
+![Пингвинчик](https://github.com/root40reg/Otus-Linux/blob/main/08/08_01.jpg)
 
 
 
