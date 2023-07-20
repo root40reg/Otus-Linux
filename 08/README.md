@@ -56,7 +56,7 @@ sudo su
   Volume group "centos_centos7" successfully renamed to "OtusRoot"
 ```
 
-правим ```/etc/fstab```, ```/etc/default/grub```, ```/boot/grub2/grub.cfg```. Везде меняем старое
+Правим ```/etc/fstab```, ```/etc/default/grub```, ```/boot/grub2/grub.cfg```. Везде меняем старое
 название на новое.
 
 Пересоздаем initrd image, чтобы он знал новое название Volume Group
@@ -65,9 +65,44 @@ sudo su
 *** Creating image file done ***
 *** Creating initramfs image file '/boot/initramfs-3.10.0-1160.88.1.el7.x86_64.img' done ***
 ```
-перезагружаемся и проверяем
+Перезагружаемся и проверяем
 ```
 [root@centos7 vagrant]# vgs
   VG       #PV #LV #SN Attr   VSize    VFree
   OtusRoot   1   2   0 wz--n- <127,00g    0 
 ```
+
+### Добавить модуль в initrd
+Создадим свой каталог в каталоге модулей
+```
+mkdir /usr/lib/dracut/modules.d/01test
+```
+Разместим два скрипта
+```
+module-setup.sh  # устанавливает модуль и вызывает скрипт test.sh
+test.sh          # сам скрипт с пингвинчиком
+```
+Пересобираем образ initrd
+```
+mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
+```
+или
+```
+dracut -f -v
+```
+Проверим список загруженых модулей
+```
+lsinitrd -m /boot/initramfs-$(uname -r).img | grep test
+```
+После чего можно пойти двумя путями для проверки:
+- Перезагрузиться и руками выключить опции rghb и quiet и увидеть вывод
+- Отредактировать grub.cfg, убрав эти опции
+
+
+
+
+
+
+
+
+
