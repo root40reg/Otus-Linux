@@ -1,27 +1,43 @@
+# 09. Инициализация системы. Systemd.
+## Описание задания
+- Написать service, который будет раз в 30 секунд мониторить лог на предмет наличия ключевого слова (файл лога и ключевое слово должны задаваться в /etc/sysconfig).
+- Из репозитория epel установить spawn-fcgi и переписать init-скрипт на unit-файл (имя service должно называться так же: spawn-fcgi).
+- Дополнить unit-файл httpd (он же apache) возможностью запустить несколько инстансов сервера с разными конфигурационными файлами.
+
+## Инструкция по выполнению
+
+### 1. service, который будет раз в 30 секунд мониторить лог на предмет наличия ключевого слова
+
+```
 vagrant up
 vagrant ssh
 sudo su
-#######timedatectl set-timezone Europe/Moscow
+```
 
-создаём файл с конфигурацией для сервиса в директории /etc/sysconfig 
-vi /etc/sysconfig/watchlog
+создаём файл с конфигурацией для сервиса в директории ```/etc/sysconfig```
+
+```vi /etc/sysconfig/watchlog```
+
 содержимое файла:
---------------
+
+```
 # Configuration file for my watchlog service
 # Place it to /etc/sysconfig
 # File and word in that file that we will be monit
 WORD="ALERT"
 LOG=/var/log/watchlog.log
--------------
+```
 
 Создаем log файл
-touch /var/log/watchlog.log
+
+```touch /var/log/watchlog.log```
 
 Создадим скрипт:
-vi /opt/watchlog.sh
+
+```vi /opt/watchlog.sh```
 
 содержимое файла:
-----------
+```
 #!/bin/bash
 WORD=$1
 LOG=$2
@@ -33,14 +49,18 @@ logger "$DATE: I found word, Master!"
 else
 exit 0
 fi
------------
+```
 
 Добавим права на запуск файла:
-chmod +x /opt/watchlog.sh
 
-vi /etc/systemd/system/watchlog.service
+```chmod +x /opt/watchlog.sh```
+
+Создадим юнит для сервиса
+
+```vi /etc/systemd/system/watchlog.service```
+
 содержимое файла:
------------
+```
 [Unit]
 Description=My watchlog service
 
@@ -48,11 +68,15 @@ Description=My watchlog service
 Type=oneshot
 EnvironmentFile=/etc/sysconfig/watchlog
 ExecStart=/opt/watchlog.sh $WORD $LOG
-------------
+```
 
-vi /etc/systemd/system/watchlog.timer
+Создадим юнит для таймера:
+
+```vi /etc/systemd/system/watchlog.timer```
+
 содержимое файла:
-------------
+
+```
 [Unit]
 Description=Run watchlog script every 30 second
 
@@ -63,22 +87,31 @@ Unit=watchlog.service
 
 [Install]
 WantedBy=multi-user.target
--------------
-Запускаем timer:
+```
+
+Запускаем и проверяем timer:
+```
 systemctl start watchlog.timer
-
 tail -f /var/log/messages
+```
 
---------------------------------
---------------------------------
+### 2. Из репозитория epel установить spawn-fcgi и переписать init-скрипт на unit-файл
 
-yum install epel-release -y && yum install spawn-fcgi php php-cli mod_fcgid httpd -y
-/etc/rc.d/init.d/spawn-fcgi - cам Init скрипт, который будем переписывать
+```yum install epel-release -y && yum install spawn-fcgi php php-cli mod_fcgid httpd -y```
 
-Но перед этим необходимо раскомментировать строки с переменными в /etc/sysconfig/spawn-fcgi
+```/etc/rc.d/init.d/spawn-fcgi``` - Init скрипт, который будем переписывать
+
+Раскомментируем строки с переменными в ```/etc/sysconfig/spawn-fcgi```
+```
 vi /etc/sysconfig/spawn-fcgi
-vi /etc/systemd/system/spawn-fcgi.service
---------
+```
+
+Создадим юнит
+
+```vi /etc/systemd/system/spawn-fcgi.service```
+
+содержимое файла:
+```
 [Unit]
 Description=Spawn-fcgi startup service by Otus
 After=network.target
@@ -92,30 +125,36 @@ KillMode=process
 
 [Install]
 WantedBy=multi-user.target
----------
+```
 
+Запускаем и проверяем
+
+```
 systemctl start spawn-fcgi
 systemctl status spawn-fcgi
------------------------------
------------------------------
-Дополнить юнит-файл apache httpd возможностью запустить несколько инстансов сервера с разными конфигами
+```
+
+### 3. Дополнить unit-файл httpd (он же apache) возможностью запустить несколько инстансов сервера
+
 Для запуска нескольких экземпляров сервиса будем использовать шаблон в
-конфигурации файла окружения (/usr/lib/systemd/system/httpd.service ):
+конфигурации файла окружения:
+```
 vi /usr/lib/systemd/system/httpd.service
---------
+```
+
+содержимое файла:
+
+```
 [Unit]
 Description=The Apache HTTP Server
 Wants=httpd-init.service
-
-After=network.target remote-fs.target nss-lookup.target httpd-
-init.service
-------
+After=network.target remote-fs.target nss-lookup.target httpd-init.service
 Documentation=man:httpd.service(8)
 
 [Service]
 Type=notify
 Environment=LANG=C
-EnvironmentFile=/etc/sysconfig/httpd-%I
+EnvironmentFile=/etc/sysconfig/httpd-%I  #добавляем строку
 ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND
 ExecReload=/usr/sbin/httpd $OPTIONS -k graceful
 # Send SIGWINCH for graceful stop
@@ -125,27 +164,37 @@ PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target
--------
+```
 
-vi /etc/sysconfig/httpd-first
------
-OPTIONS=-f conf/first.conf
------
-vi /etc/sysconfig/httpd-second
------
-OPTIONS=-f conf/second.conf
------
+```vi /etc/sysconfig/httpd-first```
+
+содержимое файла:
+
+```OPTIONS=-f conf/first.conf```
+
+```vi /etc/sysconfig/httpd-second```
+
+содержимое файла:
+
+```OPTIONS=-f conf/second.conf```
+
+```
 cd /etc/httpd/conf
 cp httpd.conf first.conf
 cp httpd.conf second.conf
 vi second.conf
- правим параметры на
+```
+правим параметры на
+
+```
 PidFile /var/run/httpd-second.pid
 Listen 8080
-
+```
 Запускаем и проверяем работу
+
+```
 systemctl start httpd@first
 systemctl start httpd@second
-Проверить можно несколькими способами, например, посмотреть, какие порты слушаются:
 
 ss -tnulp | grep httpd
+```
