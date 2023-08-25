@@ -43,6 +43,6 @@ BASH1=$(sed -n '$=' $access_log)
 BASH1=$((BASH1 + 1))
 echo "$BASH1" > $MYBASH/temp.txt
 
-rm $lock_file
-
 echo 'Log-файл с сервера nginx log-'$date1'.txt' | mail -s 'Server Admin nginx' -A $log_date tvs@pz-signal.ru
+
+rm $lock_file
