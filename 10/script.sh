@@ -45,7 +45,7 @@ BASH1=$((BASH1 + 1))
 echo "$BASH1" > $MYBASH/temp.txt
 date_t=$(cat $MYBASH/date_temp)
 
-echo 'Log-файл с сервера nginx за период ' $date_t | mail -s 'Server Admin nginx' -A $log_date tvs@pz-signal.ru
+echo 'Log-файл с сервера nginx за период ' $date_t | mail -s 'Server Admin nginx' -A $log_date email@example.ru
 
 rm $lock_file
 rm $MYBASH/date_temp
