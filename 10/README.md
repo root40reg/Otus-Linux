@@ -56,7 +56,7 @@
       2 "http://dbadmins.ru/wp-content/plugins/uploadify/includes/check.php"
       2 "http://dbadmins.ru/wp-admin/admin-post.php?page=301bulkoptions"
 
-Ошибки веб-ервера/приложения
+Ошибки веб-сервера/приложения
 ------------
      95 301
      51 404
