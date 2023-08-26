@@ -11,13 +11,73 @@
 - В письме должен быть прописан обрабатываемый временной диапазон.
 
 ## Инструкция по выполнению
+- Для корректной работы необходимо файлы ```access.log, script.sh``` и ```temp.txt``` положить в один каталог на сервере.
 
-### 1. service, который будет раз в 30 секунд мониторить лог на предмет наличия ключевого слова
+- Установим почтовый сервис для отправки почты
+```apt install mailutils ssmtp```
 
-
-
+- Необходимые параметры почтового ящика пропишем в ```/etc/ssmtp/ssmtp.conf```
+- Добавим задание в планировщик командой ```crontab -e```
 
 ```
-# crontab -e
 0 */1 * * * /home/vladimir/Otus-Linux/10/script.sh
 ```
+
+Пример лога ```log-230826-143353.txt```
+```
+Диапазон анализа лог-файла
+------------
+14/Aug/2019:04:12:10
+15/Aug/2019:00:25:46
+
+Список IP адресов (с наибольшим кол-вом запросов)
+------------
+     45 93.158.167.130
+     39 109.236.252.130
+     37 212.57.117.19
+     33 188.43.241.106
+     31 87.250.233.68
+     24 62.75.198.172
+     22 148.251.223.21
+     20 185.6.8.9
+     17 217.118.66.161
+     16 95.165.18.146
+
+Список запрашиваемых URL (с наибольшим кол-вом запросов)
+------------
+     73 "https://dbadmins.ru/"
+     15 "https://dbadmins.ru/2016/10/26/%D0%B8%D0%B7%D0%BC%D0%B5%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5-%D1%81%D0%B5%D1%82%D0%B5%D0%B2%D1%8B%D1%85-%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B5%D0%BA-%D0%B4%D0%BB%D1%8F-oracle-rac/"
+     14 "https://dbadmins.ru/2016/10/17/%D0%9F%D1%80%D0%BE%D0%B4%D0%BE%D0%BB%D0%B6%D0%B0%D0%B5%D0%BC-%D1%8D%D0%BA%D1%81%D0%BF%D0%B5%D1%80%D0%B8%D0%BC%D0%B5%D0%BD%D1%82%D1%8B-%D1%81-lacp/"
+      4 "https://dbadmins.ru/wp-content/themes/llorix-one-lite/css/font-awesome.min.css?ver=4.4.0"
+      4 "http://dbadmins.ru/"
+      3 "https://dbadmins.ru/wp-content/themes/llorix-one-lite/style.css?ver=1.0.0"
+      2 "https://dbadmins.ru/2016/12/14/virtualenv-%D0%B4%D0%BB%D1%8F-%D0%BF%D0%BB%D0%B0%D0%B3%D0%B8%D0%BD%D0%BE%D0%B2-python-scrappy-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82-%D0%BD%D0%B0-debian-jessie/"
+      2 "http://dbadmins.ru/wp-content/plugins/uploadify/readme.txt"
+      2 "http://dbadmins.ru/wp-content/plugins/uploadify/includes/check.php"
+      2 "http://dbadmins.ru/wp-admin/admin-post.php?page=301bulkoptions"
+
+Ошибки веб-ервера/приложения
+------------
+     95 301
+     51 404
+      7 400
+      3 500
+      2 499
+      1 405
+      1 403
+      1 304
+
+Список всех кодов HTTP ответа
+------------
+    498 200
+     95 301
+     51 404
+      7 400
+      3 500
+      2 499
+      1 405
+      1 403
+      1 304
+
+```
+Данный файл отправляется по почте. также в письме как и файле указывается временной диапазон
