@@ -11,3 +11,14 @@ https://docs.google.com/document/d/1q2h7ZM_yHDfwxSpzArO57j4Cm7daaWzmzqtuEGIcy9A/
 - после установки nginx должен быть в режиме enabled в systemd;
 - должен быть использован notify для старта nginx после установки;
 - сайт должен слушать на нестандартном порту - 8080, для этого использовать переменные в Ansible.
+
+Запускаем ВМ и устанавливаем Nginx с заданными параметрами
+```
+sudo su
+vagrant up
+ansible-playbook nginx.yml
+```
+Проверяем сервис
+```
+curl http://192.168.56.150:8080
+```
