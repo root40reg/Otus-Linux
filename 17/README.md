@@ -1,5 +1,5 @@
-17. SELinux - когда все запрещено
-
+# 17. SELinux - когда все запрещено
+## Описание задания
 Для выполнения домашнего задания используйте методичку
 https://docs.google.com/document/d/1QwyccIn8jijBKdaoNR4DCtTULEqb5MKK/edit?usp=share_link&ouid=104106368295333385634&rtpof=true&sd=true
 Что нужно сделать?
@@ -16,7 +16,7 @@ https://docs.google.com/document/d/1QwyccIn8jijBKdaoNR4DCtTULEqb5MKK/edit?usp=sh
 - выбрать одно из решений для реализации, предварительно обосновав выбор;
 - реализовать выбранное решение и продемонстрировать его работоспособность.
 
-
+## Инструкция по выполнению
 sudo -i
 Проверяем, что файервол выключен:
 systemctl status firewalld
