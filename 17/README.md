@@ -32,8 +32,8 @@ nginx -t
 getenforce
 ```
 
-# 3 способа разрешить в SELinux работу nginx на порту TCP 4881 
-# 1. С помощью переключателей setsebool
+## 3 способа разрешить в SELinux работу nginx на порту TCP 4881 
+### 1. С помощью переключателей setsebool
 устанавливаем ```audit2why``` командой ```yum install -y policycoreutils-python```
 
 Находим в ```/var/log/audit/audit.log``` информацию о блокировании порта
@@ -58,7 +58,7 @@ getsebool -a | grep nis_enabled
 ```
 setsebool -P nis_enabled off
 ```
-## 2. С помощью добавления нестандартного порта в имеющийся тип
+### 2. С помощью добавления нестандартного порта в имеющийся тип
 Поиск имеющегося типа, для http трафика: 
 ```
 semanage port -l | grep http
@@ -78,7 +78,7 @@ systemctl status nginx
 semanage port -d -t http_port_t -p tcp 4881
 ```
 
-## 3. С помощью формирования и установки модуля SELinux:
+### 3. С помощью формирования и установки модуля SELinux:
 Воспользуемся утилитой ```audit2allow``` для того, чтобы на основе логов SELinux сделать модуль, разрешающий работу nginx на нестандартном порту: 
 ```
 grep nginx /var/log/audit/audit.log | audit2allow -M nginx
