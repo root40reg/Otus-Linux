@@ -35,5 +35,5 @@ http://192.168.56.10:9100/metrics
 
 http://192.168.56.10:3000 (admin/admin)
 
-![02](https://github.com/root40reg/Otus-Linux/assets/132127335/5c2768b2-86ea-4f45-a75e-06bd48a6919a)
+![fsdjfhjksdhfk](https://github.com/root40reg/Otus-Linux/assets/132127335/5c2768b2-86ea-4f45-a75e-06bd48a6919a)
 
