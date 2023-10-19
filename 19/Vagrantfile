@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder "files", "/vagrant"
   config.vm.provision "shell",
-    inline: "cp /vagrant/prometheus.yml /etc/prometheus/prometheus.yml && cp /vagrant/prometheus.service /etc/systemd/system/prometheus.service && cp /vagrant/node_exporter.service /etc/systemd/system/node_exporter.service"
+    inline: "cp /vagrant/prometheus.yml /etc/prometheus/prometheus.yml && cp /vagrant/prometheus.service /etc/systemd/system/prometheus.service && cp /vagrant/node_exporter.service /etc/systemd/system/node_exporter.service && cp /vagrant/grafana_enterprise_9.5.2_1.x86_64-364648-d7217e.rpm /root/grafana_enterprise_9.5.2_1.x86_64-364648-d7217e.rpm"
 
    config.vm.provision "shell", path: "script02.sh", privileged: true
 end
