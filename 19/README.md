@@ -22,9 +22,18 @@ systemctl daemon-reload
 systemctl start grafana-server
 ```
 Проверка Prometheus
+
 http://192.168.56.10:9090/graph
+
 Проверка NodeExporter
+
 http://192.168.56.10/targets
+
 http://192.168.56.10:9100/metrics
+
 Проверка Grafana
+
 http://192.168.56.10:3000 (admin/admin)
+
+![02](https://github.com/root40reg/Otus-Linux/assets/132127335/5c2768b2-86ea-4f45-a75e-06bd48a6919a)
+
