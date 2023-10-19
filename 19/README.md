@@ -35,5 +35,15 @@ http://192.168.56.10:9100/metrics
 
 http://192.168.56.10:3000 (admin/admin)
 
-![fsdjfhjksdhfk](https://github.com/root40reg/Otus-Linux/assets/132127335/5c2768b2-86ea-4f45-a75e-06bd48a6919a)
+Во время настройки Grafana не забываем указывать порт 9090
+![02](https://github.com/root40reg/Otus-Linux/assets/132127335/5c2768b2-86ea-4f45-a75e-06bd48a6919a)
+
+Также указываем актуальную версию Prometheus
+![03](https://github.com/root40reg/Otus-Linux/assets/132127335/071aea4e-ba3f-4ff2-91a9-ce4fdf63ddea)
+
+При корректной настройке вместо No Data отобразятся необходимые графики
+![01](https://github.com/root40reg/Otus-Linux/assets/132127335/16a33c5c-4764-49db-b93d-969a179e5f86)
+
+
+
 
