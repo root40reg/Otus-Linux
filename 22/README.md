@@ -32,6 +32,7 @@ groupadd -f admin
 Пробуем подключиться с новой сессии к ВМ под новыми пользователями
 ```
 ssh otus@192.168.57.10
+yes
 exit
 ```
 Проверим, что пользователи root, vagrant и otusadm есть в группе admin
@@ -45,17 +46,12 @@ nano /usr/local/bin/login.sh
 Содержимое:
 ```
 #!/bin/bash
-#Первое условие: если день недели суббота или воскресенье
 if [ $(date +%a) = "Sat" ] || [ $(date +%a) = "Sun" ]; then
- #Второе условие: входит ли пользователь в группу admin
- if getent group admin | grep -qw "$PAM_USER"; then
-        #Если пользователь входит в группу admin, то он может подключиться
-        exit 0
+  if getent group admin | grep -qw "$PAM_USER"; then
+      exit 0
       else
-        #Иначе ошибка (не сможет подключиться)
         exit 1
     fi
-  #Если день не выходной, то подключиться может любой пользователь
   else
     exit 0
 fi
