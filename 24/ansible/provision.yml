@@ -1,0 +1,128 @@
+- name: Config all server
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Set localtime
+      ansible.builtin.file:
+        src: /usr/share/zoneinfo/Europe/Moscow
+        dest: /etc/localtime
+        state: link
+
+    - name: Restart chronyd
+      ansible.builtin.service:
+        name: chronyd
+        state: restarted
+
+    - name: Install packages
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - vim
+          - nano
+
+- name: Config web server
+  hosts: web
+  become: true
+
+  tasks:
+    - name: Install epel
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - epel-release
+
+    - name: Install nginx
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - nginx
+          - audispd-plugins
+
+    - name: Config error_log
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/nginx.conf
+        line: "error_log syslog:server=192.168.56.15:514,tag=nginx_error;"
+        insertafter: error_log /var/log/nginx/error.log;
+
+    - name: Config access_log
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/nginx.conf
+        line: "access_log syslog:server=192.168.56.15:514,tag=nginx_access,severity=info combined;"
+        insertafter: access_log  /var/log/nginx/access.log  main;
+
+    - name: Nginx audit
+      ansible.builtin.lineinfile:
+        path: /etc/audit/rules.d/audit.rules
+        line: "{{ item }}"
+      with_items:
+        - '-w /etc/nginx/nginx.conf -p wa -k nginx_conf'
+        - '-w /etc/nginx/default.d/ -p wa -k nginx_conf'
+
+    - name: Config auditd
+      ansible.builtin.replace:
+        path: /etc/audit/auditd.conf
+        regexp: '^(name_format).*'
+        replace: '\1 = HOSTNAME'
+
+    - name: Config au-remote
+      ansible.builtin.replace:
+        path: /etc/audisp/plugins.d/au-remote.conf
+        regexp: '^(active).*'
+        replace: '\1 = yes'
+
+    - name: Config audisp-remote
+      ansible.builtin.replace:
+        path: /etc/audisp/audisp-remote.conf
+        regexp: '^(remote_server).*'
+        replace: '\1 = 192.168.56.15'
+
+    - name: restart auditd
+      ansible.builtin.shell: service auditd restart
+
+    - name: Start nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+
+
+- name: Config log server
+  hosts: log
+  become: true
+  tasks:
+
+    - name: Edit rsyslog0
+      replace:
+        path: "/etc/rsyslog.conf"
+        regexp: '^#*\s*ModLoad\s*imudp'
+        replace: '\1'
+
+
+    - name: Edit rsyslog1
+      ansible.builtin.lineinfile:
+        path: /etc/rsyslog.conf
+        line: "{{ item }}"
+      with_items:
+        - 'module(load="imudp")'
+        - 'input(type="imudp" port="514")'
+        - 'module(load="imtcp")'
+        - 'input(type="imtcp" port="514")'
+        - '$template RemoteLogs,"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log"'
+        - '*.* ?RemoteLogs'
+        - '& ~'
+
+    - name: Config auditd
+      ansible.builtin.lineinfile:
+        path: /etc/audit/auditd.conf
+        line: "tcp_listen_port = 60"
+
+    - name: Restart auditd
+      ansible.builtin.shell: service auditd restart
+
+    - name: restart rsyslog
+      ansible.builtin.service:
+        name: rsyslog
+        state: restarted
