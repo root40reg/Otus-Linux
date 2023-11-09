@@ -34,20 +34,21 @@ vagrant up
 Далее заходим на log-сервер и смотрим информацию об nginx:
 ```
 vagrant ssh log
+sudo -i
 cat /var/log/rsyslog/web/nginx_access.log 
 cat /var/log/rsyslog/web/nginx_error.log
 ```
 
 Проверяем логи аудита на сервере логов (log):
-
+Заходим на web и меняем права на файл
 ```
+vagrant ssh web
+sudo -i
 ls -l /etc/nginx/nginx.conf
 chmod +x /etc/nginx/nginx.conf
 ls -l /etc/nginx/nginx.conf
+```
+Возвращаемся на log и проверяем: 
+```
 grep web /var/log/audit/audit.log
 ```
-
-
-
-
-
