@@ -27,5 +27,27 @@ https://docs.google.com/document/d/16UBAMu4LYqvRv6PmCeHcmOampMrIZavH/edit?usp=sh
 ```
 vagrant up
 ```
+Проверяем логи nginx на сервере логов (log):
 
-Запускаем ВМ
+Попробуем несколько раз зайти по адресу http://192.168.56.10, в том числе и на несуществующюю страницу
+
+Далее заходим на log-сервер и смотрим информацию об nginx:
+```
+vagrant ssh log
+cat /var/log/rsyslog/web/nginx_access.log 
+cat /var/log/rsyslog/web/nginx_error.log
+```
+
+Проверяем логи аудита на сервере логов (log):
+
+```
+ls -l /etc/nginx/nginx.conf
+chmod +x /etc/nginx/nginx.conf
+ls -l /etc/nginx/nginx.conf
+grep web /var/log/audit/audit.log
+```
+
+
+
+
+
