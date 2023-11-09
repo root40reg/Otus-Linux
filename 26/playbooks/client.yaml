@@ -1,0 +1,16 @@
+- name: Config backup server
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install epel-release
+      ansible.builtin.yum:
+        name: epel-release
+
+    - name: Install packages
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - vim
+          - nano
