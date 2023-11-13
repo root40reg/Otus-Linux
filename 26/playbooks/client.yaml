@@ -14,3 +14,38 @@
         packages:
           - vim
           - nano
+          - borgbackup
+
+    - name:  Create group
+      ansible.builtin.group:
+        name: borg
+
+    - name: Create user
+      ansible.builtin.user:
+        name: borg
+
+    - name: Create dir .ssh
+      ansible.builtin.file:
+        path: /home/borg/.ssh/
+        state: directory
+        mode: "0700"
+        owner: borg
+        group: borg
+
+
+#    - name: Copy from Local
+#      copy:
+#        src: ../ssh/id_ssh_rsa.pub
+#        dest: /home/borg/.ssh/id_ssh_rsa.pub
+#        backup: yes
+
+    - name: Generate OpenSSH
+      community.crypto.openssh_keypair:
+        path: /home/borg/.ssh/id_ssh_rsa
+
+    - name: Download file
+      become: yes
+      fetch:
+        src: /home/borg/.ssh/id_ssh_rsa.pub
+        dest: ../ssh/id_ssh_rsa.pub
+        flat: yes
