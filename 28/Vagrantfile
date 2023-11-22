@@ -10,7 +10,6 @@ config.vm.define "pxeserver" do |server|
 
   server.vm.host_name = 'pxeserver'
   server.vm.network :private_network, 
-#                    ip: "10.0.2.15",   
                    ip: "10.0.0.20", 
                      virtualbox__intnet: 'pxenet'
 
@@ -21,8 +20,6 @@ config.vm.define "pxeserver" do |server|
   config.vm.provision "shell",
     inline: "cp /vagrant/CentOS-8.4.2105-x86_64-dvd1.iso /root/CentOS-8.4.2105-x86_64-dvd1.iso"
 
-
-#  vagrant scp "/home/vladimir/iso/CentOS-8.4.2105-x86_64-dvd1.iso :/root/CentOS-8.4.2105-x86_64-dvd1.iso"
   server.vm.provider "virtualbox" do |vb|
     vb.memory = "1024"
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
@@ -47,7 +44,6 @@ config.vm.define "pxeserver" do |server|
   config.vm.define "pxeclient" do |pxeclient|
     pxeclient.vm.box = 'bento/centos-8.4'
     pxeclient.vm.host_name = 'pxeclient'
-#    pxeclient.vm.network :private_network, ip: "10.0.2.16"
     pxeclient.vm.network :private_network, ip: "10.0.0.21"
     pxeclient.vm.provider :virtualbox do |vb|
       vb.memory = "2048"
