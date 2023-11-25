@@ -1,33 +1,34 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "centos/7"
-  config.vm.box_version = "2004.01"
-#  config.vm.disk :disk, size: "10GB", name: "extra_storage"
-  config.vm.provider :virtualbox do |v|
-    v.memory = 512
-    v.cpus = 1
-  end
+config.vm.box = "centos/7"
+config.vm.box_version = "2004.01"
+config.vm.disk :disk, size: "12GB", name: "extra_storage"
+config.vm.provider :virtualbox do |v|
+v.memory = 512
+v.cpus = 1
+end
 
-  boxes = [
-    {  :name => "backup",
-       :ip => "192.168.56.10",
-       playbook: "playbooks/backup.yaml",
+boxes = [
 
-    },
-    {  :name => "client",
-       :ip => "192.168.56.15",
-       playbook: "playbooks/client.yaml",
-    }
-  ]
+{ :name => "client",
+:ip => "192.168.56.15",
+playbook: "playbooks/client.yaml",
+},
+{ :name => "backup",
+:ip => "192.168.56.10",
+playbook: "playbooks/backup.yaml",
 
-  boxes.each do |opts|
-    config.vm.define opts[:name] do |config|
-      config.vm.hostname = opts[:name]
-      config.vm.network "private_network", ip: opts[:ip]
-        config.vm.provision "ansible" do |ansible|
-        ansible.playbook = opts[:playbook]
-          ansible.host_key_checking = "false"
-          ansible.limit = "all"
-    end
-  end
+}
+]
+
+boxes.each do |opts|
+config.vm.define opts[:name] do |config|
+config.vm.hostname = opts[:name]
+config.vm.network "private_network", ip: opts[:ip]
+config.vm.provision "ansible" do |ansible|
+ansible.playbook = opts[:playbook]
+ansible.host_key_checking = "false"
+ansible.limit = "all"
+end
+end
 end
 end

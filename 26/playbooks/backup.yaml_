@@ -51,3 +51,4 @@
       copy:
         src: ../ssh/id_rsa.pub
         dest: /home/borg/.ssh/authorized_keys
+        backup: yes
