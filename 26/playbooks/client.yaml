@@ -1,3 +1,4 @@
+
 - name: Config backup server
   hosts: client
   become: true
@@ -31,3 +32,31 @@
         src: /home/borg/.ssh/id_rsa.pub
         dest: ../ssh/id_rsa.pub
         flat: yes
+
+    - name: Init borg
+      become: yes
+      become_user: borg
+      ansible.builtin.command: borg init --encryption=repokey borg@192.168.56.10:/var/backup/
+      environment:
+        BORG_PASSPHRASE: 1234
+
+    - name: Add backup service config
+      ansible.builtin.copy:
+        src: ../systemd/
+        dest: /etc/systemd/system/
+        mode: "0744"
+
+    - name: Reload systemd (if config changed)
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Enable backup timer
+      ansible.builtin.systemd:
+        name: borg-backup.timer
+        state: started
+        enabled: true
+
+    - name: Initial start backup service
+      ansible.builtin.systemd:
+        name: borg-backup
+        state: started
