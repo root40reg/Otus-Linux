@@ -9,15 +9,22 @@ end
 
 boxes = [
 
+#{ :name => "backup",
+#:ip => "192.168.56.10",
+#playbook: "playbooks/backup.yaml",
+#},
+
 { :name => "client",
 :ip => "192.168.56.15",
 playbook: "playbooks/client.yaml",
 },
+
 { :name => "backup",
 :ip => "192.168.56.10",
 playbook: "playbooks/backup.yaml",
-
+#playbook: "playbooks/client2.yaml",
 }
+
 ]
 
 boxes.each do |opts|
