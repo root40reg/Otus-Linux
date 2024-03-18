@@ -4,7 +4,7 @@ Description=Borg Backup
 [Service]
 Type=oneshot
 User=borg
-Environment="BORG_PASSPHRASE=Otus1234"
+Environment="BORG_PASSPHRASE=123"
 Environment=REPO=borg@192.168.56.10:/var/backup/
 Environment=BACKUP_TARGET=/etc
 
