@@ -13,7 +13,6 @@
         name: "{{ packages }}"
       vars:
         packages:
-          - vim
           - nano
           - borgbackup
 
@@ -26,6 +25,11 @@
         name: borg
         generate_ssh_key: yes
 
+    - name: Disable strict host check
+      ansible.builtin.lineinfile:
+        path: "/etc/ssh/ssh_config"
+        line: "StrictHostKeyChecking no"
+
     - name: Download file
       become: yes
       fetch:
@@ -33,30 +37,14 @@
         dest: ../ssh/id_rsa.pub
         flat: yes
 
-    - name: Init borg
-      become: yes
-      become_user: borg
-      ansible.builtin.command: borg init --encryption=repokey borg@192.168.56.10:/var/backup/
-      environment:
-        BORG_PASSPHRASE: 1234
+    - name: Copy from Local1
+      copy:
+        src: ../systemd/borg-backup.service
+        dest: /etc/systemd/system/borg-backup.service
+        mode: "0755"
 
-    - name: Add backup service config
-      ansible.builtin.copy:
-        src: ../systemd/
-        dest: /etc/systemd/system/
-        mode: "0744"
-
-    - name: Reload systemd (if config changed)
-      ansible.builtin.systemd:
-        daemon_reload: true
-
-    - name: Enable backup timer
-      ansible.builtin.systemd:
-        name: borg-backup.timer
-        state: started
-        enabled: true
-
-    - name: Initial start backup service
-      ansible.builtin.systemd:
-        name: borg-backup
-        state: started
+    - name: Copy from Local2
+      copy:
+        src: ../systemd/borg-backup.timer
+        dest: /etc/systemd/system/borg-backup.timer
+        mode: "0755"

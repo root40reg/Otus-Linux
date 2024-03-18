@@ -12,6 +12,7 @@
         name: "{{ packages }}"
       vars:
         packages:
+          - vim
           - nano
           - borgbackup
 
@@ -50,35 +51,3 @@
       copy:
         src: ../ssh/id_rsa.pub
         dest: /home/borg/.ssh/authorized_keys
-
-- name: Config backup server
-  hosts: client
-  become: true
-
-  tasks:
-    - name: Init borg
-      become: yes
-      become_user: borg
-      ansible.builtin.command: borg init --encryption=repokey borg@192.168.56.10:/var/backup/
-      environment:
-        BORG_PASSPHRASE: 123
-
-#    - name: Create dir temp
-#      ansible.builtin.file:
-#        path: /temp/
-#        state: directory
-#        mode: "0777"
-
-#    - name: Copy script
-#      template:
-#        src: ../script.sh
-#        dest: /temp/script.sh
-#        mode: "0777"
-#        owner: root
-#        group: root
-
-    - name: execute the script on destination servers
-      script:
-        cmd: ../script.sh
-
-
