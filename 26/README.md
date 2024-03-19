@@ -23,3 +23,28 @@ https://docs.google.com/document/d/1L0VtVCn2tXmC0Pirlfhnr6rEpOANbP-C/edit?usp=sh
   Для сдачи домашнего задания ожидаем настроенные стенд, логи процесса бэкапа и описание процесса восстановления.
   
   Формат сдачи ДЗ - vagrant + ansible
+
+## Инструкция по выполнению
+
+```
+vagrant up
+vagrant ssh client
+```
+Проверка работы таймера 
+```
+systemctl list-timers --all
+```
+Просмотр логов
+```
+cat /var/log/messages | grep borg
+```
+Просмотр списка бэкапов
+```
+sudo su - borg
+borg list borg@192.168.56.10:/var/backup/
+```
+Просмотр списка файлов в бэкапе и извлечение всей директории из архива
+```
+borg list borg@192.168.56.10:/var/backup/::etc-2021-10-15_23:00:15
+borg extract borg@192.168.56.10:/var/backup/::etc-2021-10-15_23:00:15 etc/
+```
