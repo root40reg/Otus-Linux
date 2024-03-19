@@ -23,6 +23,7 @@
     - name: Create user
       ansible.builtin.user:
         name: borg
+        group: root
         generate_ssh_key: yes
 
     - name: Disable strict host check
@@ -41,10 +42,8 @@
       copy:
         src: ../systemd/borg-backup.service
         dest: /etc/systemd/system/borg-backup.service
-        mode: "0755"
 
     - name: Copy from Local2
       copy:
         src: ../systemd/borg-backup.timer
         dest: /etc/systemd/system/borg-backup.timer
-        mode: "0755"

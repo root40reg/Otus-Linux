@@ -63,22 +63,7 @@
       environment:
         BORG_PASSPHRASE: 123
 
-#    - name: Create dir temp
-#      ansible.builtin.file:
-#        path: /temp/
-#        state: directory
-#        mode: "0777"
-
-#    - name: Copy script
-#      template:
-#        src: ../script.sh
-#        dest: /temp/script.sh
-#        mode: "0777"
-#        owner: root
-#        group: root
-
     - name: execute the script on destination servers
       script:
         cmd: ../script.sh
-
-
+        become_user: root
