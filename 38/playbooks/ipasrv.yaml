@@ -1,0 +1,46 @@
+- name: Config ipa server
+  hosts: ipa.otus.lan
+  become: true
+
+  tasks:
+
+    - name: Install packages1
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - nano
+          - chrony
+
+    - name: Copy from Local sysctl
+      copy:
+        src: ../files/sysctl.conf
+        dest: /etc/sysctl.conf
+
+    - name: Copy from Local ipa-server
+      copy:
+        src: ../files/ipa-server.sh
+        dest: /root/ipa-server.sh
+
+    - name: execute the script on dest. servers
+      script:
+        cmd: ../files/script.sh
+        become_user: root
+
+    - name: Copy from Local config
+      copy:
+        src: ../files/config
+        dest: /etc/selinux/config
+
+    - name: Copy from Local hosts
+      copy:
+        src: ../files/hosts
+        dest: /etc/hosts
+
+    - name: Install packages 2
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - '@idm:DL1'
+          - ipa-server
