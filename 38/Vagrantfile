@@ -3,26 +3,29 @@ Vagrant.configure("2") do |config|
     config.vm.box = "generic/centos8"
 #    config.vm.box_version = "20210210.0"
  
-    config.vm.provider :virtualbox do |v|
-#      v.memory = 1900
-      v.cpus = 1
-    end
+#    config.vm.provider :virtualbox do |v|
+#      v.memory = 1850
+#      v.cpus = 1
+#    end
   
     # Указываем имена хостов и их IP-адреса
     boxes = [
       { :name => "ipa.otus.lan",
         :ip => "192.168.56.10",
         :memory => 1900,
+        :cpus => 1,
         playbook: "playbooks/ipasrv.yaml",
       },
       { :name => "client1.otus.lan",
         :ip => "192.168.56.11",
         :memory => 512,
+        :cpus => 1,
         playbook: "playbooks/clients.yml",
       },
       { :name => "client2.otus.lan",
         :ip => "192.168.56.12",
         :memory => 512,
+        :cpus => 1,
         playbook: "playbooks/clients.yml",
       }
     ]
@@ -33,6 +36,11 @@ Vagrant.configure("2") do |config|
         config.vm.network "private_network", ip: opts[:ip]
         config.vm.provision "ansible" do |ansible|
         ansible.playbook = opts[:playbook]
+
+        config.vm.provider :virtualbox do |v|
+          v.memory = opts[:memory]
+          v.cpus = opts[:cpus]
+    end
       end
     end
   end

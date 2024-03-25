@@ -1,4 +1,4 @@
-- name: Base set up
+- name: ipa
   hosts: all
   #Выполнять действия от root-пользователя
   become: yes

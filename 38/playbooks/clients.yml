@@ -1,5 +1,5 @@
 - name: Base set up
-  hosts: all
+  hosts: client1.otus.lan,client2.otus.lan
   #Выполнять действия от root-пользователя
   become: yes
   tasks:
@@ -57,7 +57,3 @@
         - freeipa-client
       state: present
       update_cache: true
-
-#  #Запуск скрипта добавления хоста к серверу
-#  - name: add host to ipa-server
-#    shell: echo -e "yes\nyes" | ipa-client-install --mkhomedir --domain=OTUS.LAN --server=ipa.otus.lan --no-ntp -p admin -w otus4321

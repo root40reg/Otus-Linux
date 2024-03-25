@@ -1,0 +1,23 @@
+
+vagrant up
+vagrant ssh ipa.otus.lan
+sudo -i
+sh /root/ipa-server.sh (говорим no и затем yes)
+kinit admin
+ipa user-add otus1 --first=Otus --last=User --password
+
+Запускаем playbook для склентских ВМ
+ansible-playbook -i playbooks/hosts playbooks/ipacl.yaml
+
+Заходим на client1
+vagrant ssh client1.otus.lan
+sudo -i
+kinit otus1
+123
+меняем на новый пароль(12345678)
+
+
+Заходим на client2
+vagrant ssh client2.otus.lan
+sudo -i
+kinit otus1
