@@ -4,7 +4,6 @@
 MACHINES = {
   :inetRouter => {
         :box_name => "generic/centos8",
-#        :box_version => "20210210.0",
         :vm_name => "inetRouter",
         :net => [
                    {adapter: 2, auto_config: false, virtualbox__intnet: "router-net"},
@@ -14,7 +13,6 @@ MACHINES = {
   },
   :centralRouter => {
         :box_name => "generic/centos8",
-#        :box_version => "20210210.0",
         :vm_name => "centralRouter",
         :net => [
                    {adapter: 2, auto_config: false, virtualbox__intnet: "router-net"},
@@ -26,7 +24,6 @@ MACHINES = {
 
   :office1Router => {
         :box_name => "generic/centos8",
-#        :box_version => "20210210.0",
         :vm_name => "office1Router",
         :net => [
                    {ip: '192.168.255.10', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "office1-central"},
@@ -40,7 +37,6 @@ MACHINES = {
 
   :testClient1 => {
         :box_name => "generic/centos8",
-#        :box_version => "20210210.0",
         :vm_name => "testClient1",
         :net => [
                    {adapter: 2, auto_config: false, virtualbox__intnet: "testLAN"},
@@ -50,7 +46,6 @@ MACHINES = {
 
   :testServer1 => {
         :box_name => "generic/centos8",
-#        :box_version => "20210210.0",
         :vm_name => "testServer1",
         :net => [
                    {adapter: 2, auto_config: false, virtualbox__intnet: "testLAN"},
