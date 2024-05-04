@@ -1,0 +1,92 @@
+- name: OpenVPN Server config
+  hosts: server
+  become: yes
+
+  tasks:
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install packages
+      apt:
+        name:
+          - nano
+          - openvpn
+          - easy-rsa
+
+    - name: Copy sh crt
+      ansible.builtin.copy:
+        src: "../files/crt.sh"
+        dest: /etc/openvpn/crt.sh
+        mode: "770"
+
+    - name: Copy openvpn service vars
+      ansible.builtin.copy:
+        src: "../files/vars"
+        dest: /usr/share/easy-rsa/vars
+
+    - name: Copy openvpn service unit
+      ansible.builtin.copy:
+        src: "../files/server.conf"
+        dest: /etc/openvpn/server.conf
+        owner: root
+        group: root
+        mode: "0640"
+
+    - name: Copy openvpn service client
+      ansible.builtin.copy:
+        src: "../files/client"
+        dest: /etc/openvpn/client/client
+        owner: root
+        group: root
+        mode: "0640"
+
+    - name: Run a crt.sh
+      ansible.builtin.script: ../files/crt.sh
+
+    - name: Start openvpn
+      ansible.builtin.service:
+        name: openvpn@server
+        state: started
+        enabled: true
+
+
+- name: OpenVPN client config
+  hosts: client
+  become: yes
+
+  tasks:
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install packages
+      apt:
+        name:
+          - nano
+          - openvpn
+          - easy-rsa
+
+    - name: copy client files
+      template:
+        src: "../files/keys/{{ item }}"
+        dest: /etc/openvpn/client/
+        owner: root
+        group: root
+        mode: 0600
+      loop:
+          - ca.crt
+          - client.crt
+          - client.key
+
+    - name: Copy openvpn service unit
+      ansible.builtin.copy:
+        src: "../files/client.conf"
+        dest: /etc/openvpn/client.conf
+        owner: root
+        group: root
+        mode: "0640"
